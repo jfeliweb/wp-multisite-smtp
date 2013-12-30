@@ -5,7 +5,7 @@ Plugin URI: https://github.com/webtekk/wp-multisite-smtp
 Description: Allows for the setup of SMTP mail via constants in wp-config.php
 Author: Alexander Rohmann
 Author URI: https://github.com/webtekk/
-Version: 1.0
+Version: 1.1
 */
 
 //Validate settings before hooking phpmailer
@@ -27,6 +27,13 @@ function global_setup_network_smtp($phpmailer) {
     $phpmailer->Host = GLOBAL_SMTP_HOST;
     $phpmailer->Username = GLOBAL_SMTP_USER;
     $phpmailer->Password = GLOBAL_SMTP_PASSWORD;
+    
+    
+    //nick added - Each site has its own email
+    global $blog_id;
+    $blog_details = get_blog_details($blog_id);
+    $phpmailer->From = 'wordpress@'.$blog_details->domain;
+    $phpmailer->FromName = $blog_details->blogname;
     
     //assumed
     $phpmailer->From = GLOBAL_SMTP_FROM;
